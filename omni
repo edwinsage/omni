@@ -1,0 +1,69 @@
+#!/usr/bin/perl
+
+# Omni, The Only Graphical Program I'll Ever Need (tm)
+# Version 0.0.0-alpha, Just-get-it-running edition
+# Copyright 2020 Michael Pirkola
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+use Tk;
+use strict;
+#use warnings;
+
+# Super hacky start:
+# Hide the keyboard so the window centers properly.
+system('busctl call --user sm.puri.OSK0 /sm/puri/OSK0 sm.puri.OSK0 SetVisible b false');
+# And sleep, because the above command doesn't wait.
+sleep 1;
+
+
+
+
+
+
+my $mw = MainWindow->new;
+# This size works on phosh with scaling=2
+$mw->geometry("360x648");
+$mw->title("Hello World");
+
+# Read input, build lists.
+while( <> )  {
+	chomp;
+	my $label = $_;
+	last unless $_ = <>;
+	chomp;
+	my $command = $_;
+	$mw->Button(-text => "$label", -command => sub { &do_it($command) })->grid(-sticky => "nsew");
+	}
+
+
+
+
+# Resize everything to fit.
+my( $columns, $rows ) = $mw->gridSize( );
+for( my $i = 0; $i < $columns; $i++ )  {
+	$mw->gridColumnconfigure($i, -weight => 1);
+	}
+for( my $i = 0; $i < $rows; $i++ )  {
+	$mw->gridRowconfigure($i, -weight => 1);
+	}
+
+MainLoop;
+
+
+sub do_it  {
+	system("@_ &");
+	exit;
+	}
+
