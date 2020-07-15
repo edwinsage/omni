@@ -8,7 +8,7 @@ command to be passed to the shell when the button is pressed.  This exact
 method for input will likely be changed (or at least extended) in the
 future. 
 
-# Examples:
+## Examples:
 
     Yes
     echo yes
@@ -19,6 +19,7 @@ This tells omni to create two buttons labeled "Yes" and "No", which will
 echo the indicated word to the terminal.
 
 **mediabuttons.omni**:
+
     Play
     ssh user@host mediaplayer --play;omni mediabuttons.omni
     Pause
