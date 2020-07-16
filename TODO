@@ -1,0 +1,14 @@
+Immediately solvable:
+* Text-fitting for buttons
+* Arrange buttons into multiple columns as needed
+
+
+Eventual:
+* Come up with a more robust format for input files
+* Less hacky window sizing, to allow for non-pinephone devices
+
+
+Possibilities:
+* Allow images on buttons instead of text
+* Add syntax for multi-level menus, rather than only stateless buttons
+

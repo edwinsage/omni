@@ -25,6 +25,8 @@ use strict;
 # Hide the keyboard so the window centers properly.
 system('busctl call --user sm.puri.OSK0 /sm/puri/OSK0 sm.puri.OSK0 SetVisible b false');
 # And sleep, because the above command doesn't wait.
+# There's probably another way to check this,
+# or a better way to place the window.
 sleep 1;
 
 
@@ -37,10 +39,13 @@ my $mw = MainWindow->new;
 $mw->geometry("360x648");
 $mw->title("Hello World");
 
-# Read input, build lists.
+# Read input, build buttons.
 while( <> )  {
 	chomp;
+	# Skip blank lines
+	next if /^$/;
 	my $label = $_;
+	# Handle files with an odd number of lines - just drop the end
 	last unless $_ = <>;
 	chomp;
 	my $command = $_;

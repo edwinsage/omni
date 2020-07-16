@@ -1,12 +1,22 @@
 Omni is intended to be a painfully simple way to build a button interface
-for common shell commands on touchscreen devices, with a specific focus
-on the Pinephone. 
+for common shell commands on touchscreen GNU/Linux devices, with an
+initial focus on the Pinephone. 
 
 It accepts input either from a file or STDIN, reading lines in pairs and
 creating a button with the first line as the button text and the second a
 command to be passed to the shell when the button is pressed.  This exact
 method for input will likely be changed (or at least extended) in the
 future. 
+
+## Getting started:
+
+To start using omni, place the executable in your PATH, or in another
+convenient location.  Create a text file with lines that alternate button
+labels with shell commands.  Then run
+
+    $ omni [filename]
+
+
 
 ## Examples:
 
