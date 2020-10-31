@@ -27,8 +27,10 @@ system('busctl call --user sm.puri.OSK0 /sm/puri/OSK0 sm.puri.OSK0 SetVisible b 
 # And sleep, because the above command doesn't wait.
 # There's probably another way to check this,
 # or a better way to place the window.
-sleep 1;
+#sleep 1;
 
+# We're already hacky, so here's a hacky <1 sec sleep.
+select( undef , undef, undef, 0.35 );
 
 
 
@@ -39,36 +41,79 @@ my $mw = MainWindow->new;
 $mw->geometry("360x648");
 $mw->title("Hello World");
 
-# Read input, build buttons.
-while( <> )  {
-	chomp;
-	# Skip blank lines
-	next if /^$/;
-	my $label = $_;
-	# Handle files with an odd number of lines - just drop the end
-	last unless $_ = <>;
-	chomp;
-	my $command = $_;
-	$mw->Button(-text => "$label", -command => sub { &do_it($command) })->grid(-sticky => "nsew");
+my @source;
+
+# Read input to fill initial lists.
+push( @source, $_ ) while(<>);
+
+my $state = 'running';
+
+until( $state eq 'done' )  {
+	# Parse input
+	my @label;
+	my @command;
+	fill_lists( \@source, \@label, \@command );
+	
+	# Create buttons
+	for( my $i = 0; $i < @label; $i++ )  {
+		add_button( $mw, $label[$i], $command[$i] );
+		}
+	
+	# Resize everything to fit.
+	my( $columns, $rows ) = $mw->gridSize( );
+	for( my $i = 0; $i < $columns; $i++ )  {
+		$mw->gridColumnconfigure($i, -weight => 1);
+		}
+	for( my $i = 0; $i < $rows; $i++ )  {
+		$mw->gridRowconfigure($i, -weight => 1);
+		}
+	
+	# Draw it
+	MainLoop;
 	}
 
 
 
 
-# Resize everything to fit.
-my( $columns, $rows ) = $mw->gridSize( );
-for( my $i = 0; $i < $columns; $i++ )  {
-	$mw->gridColumnconfigure($i, -weight => 1);
-	}
-for( my $i = 0; $i < $rows; $i++ )  {
-	$mw->gridRowconfigure($i, -weight => 1);
-	}
-
-MainLoop;
 
 
 sub do_it  {
 	system("@_ &");
 	exit;
 	}
+
+sub fill_lists  {
+	# Arguments are an array ref to parse, and two array refs to fill.
+	my $source = shift @_;
+	my $labels = shift @_;
+	my $commands = shift @_;
+	
+	# Empty the provided array as we fill the new ones.
+	# No real reason other than clean code here.
+	while( @$source )  {
+		$_ = shift @$source;
+		chomp;
+		# Skip blank lines
+		next if /^$/;
+		my $label = $_;
+		# Handle files with an odd number of lines - just drop the end
+		last unless $_ = shift @$source;
+		chomp;
+		my $command = $_;
+		
+		push @$labels, $label;
+		push @$commands, $command;
+		}
+	
+	
+	}
+
+sub add_button  {
+	# Maybe add something about placement later
+	my ( $mw, $label, $command ) = @_;
+	$mw->Button(-text => "$label", -command =>
+	    sub { &do_it($command) })->grid(-sticky => "nsew");
+	}
+
+
 
