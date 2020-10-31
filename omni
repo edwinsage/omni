@@ -70,8 +70,9 @@ until( $state eq 'done' )  {
 
 
 sub do_it  {
+	my $persist = shift;
 	system("@_ &");
-	exit;
+	exit unless $persist;
 	}
 
 sub fill_lists  {
@@ -103,8 +104,13 @@ sub fill_lists  {
 sub add_button  {
 	# Maybe add something about placement later
 	my ( $mw, $label, $command ) = @_;
+	my $persist;
+	
+	# If a command starts with &, don't exit after running the command.
+	$persist = $command =~ s/^(\&)//;
+	
 	$mw->Button(-text => "$label", -command =>
-	    sub { &do_it($command) })->grid(-sticky => "nsew");
+	    sub { &do_it($persist, $command) })->grid(-sticky => "nsew");
 	}
 
 

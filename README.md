@@ -31,15 +31,15 @@ echo the indicated word to the terminal.
 **mediabuttons.omni**:
 
     Play
-    ssh user@host mediaplayer --play;omni mediabuttons.omni
+    & ssh user@host mediaplayer --play
     Pause
-    ssh user@host mediaplayer --pause;omni mediabuttons.omni
+    & ssh user@host mediaplayer --pause
     Next
-    ssh user@host mediaplayer --skip;omni mediabuttons.omni
+    & ssh user@host mediaplayer --skip
     Exit
     sleep 0
 
 
 This could be used as a remote control for a media player running on a
-remote system.  Note that each command runs omni again, causing the
-buttons to persist.
+remote system.  Note the commands that start with &, which causes the
+menu to persist.
